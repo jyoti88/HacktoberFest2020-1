@@ -1,0 +1,40 @@
+****DOWNLOAD IMAGE*******************
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.sql.Blob;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+public class DownloadImage {
+public static void main(String[] args) {
+	Connection con=Dao.getCon();
+	try {
+		//FileInputStream im=new FileInputStream("C:\\Users\\Desktop\\Image\\Picture1-352x300.png");
+		FileOutputStream fo=new FileOutputStream("D://deep.png");
+		PreparedStatement cb=con.prepareStatement("select * from ddd");
+		
+		ResultSet rs=cb.executeQuery();
+		if(rs.next()) {
+			System.out.println("hi");
+			Blob b=rs.getBlob(1);
+			System.out.println(b.length());
+			InputStream im=b.getBinaryStream(1, b.length());
+			//byte data[]=b.getBytes(1,(int)b.length());
+			System.out.println(im.available());
+			int i=0;
+			while((i=im.read())!=-1) {
+				fo.write(i);	
+			}
+			
+			fo.close();
+		}
+		System.out.println("success");
+	}catch (Exception e) {
+		System.out.println(e);
+	}
+}
+}
